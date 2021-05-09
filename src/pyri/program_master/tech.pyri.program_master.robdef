@@ -42,6 +42,7 @@ struct PyriProgramStepNext
     field string result
     field PyriProgramStepNextOpCode op_code
     field UUID jump_target
+    field varvalue{string} extended
 end
 
 struct PyriProgramStep
@@ -50,11 +51,13 @@ struct PyriProgramStep
     field string procedure_name 
     field string{list} procedure_args
     field PyriProgramStepNext{list} next
+    field varvalue{string} extended
 end
 
 struct PyriProgram
     field string name
     field PyriProgramStep{list} steps
+    field varvalue{string} extended
 end
 
 struct PyriProgramState
