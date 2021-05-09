@@ -1,0 +1,93 @@
+service tech.pyri.program_master
+
+stdver 0.10
+
+import com.robotraconteur.datetime
+import com.robotraconteur.device
+import com.robotraconteur.device.isoch
+import com.robotraconteur.device.clock
+import com.robotraconteur.uuid
+
+using com.robotraconteur.datetime.DateTimeUTC
+using com.robotraconteur.device.Device
+using com.robotraconteur.device.DeviceInfo
+using com.robotraconteur.device.isoch.IsochDevice
+using com.robotraconteur.device.isoch.IsochInfo
+using com.robotraconteur.device.clock.DeviceClock
+using com.robotraconteur.device.clock.DeviceTime
+using com.robotraconteur.datetime.TimeSpec3
+using com.robotraconteur.uuid.UUID
+
+enum PyriProgramStateFlags
+    unknown = 0,
+    ready = 0x1,
+    error = 0x2,
+    stopped = 0x4,
+    running = 0x8,
+    stepping = 0x10,
+    paused = 0x20,
+    no_program_loaded = 0x40,
+    invalid_step = 0x80
+end
+
+enum PyriProgramStepNextOpCode
+    unknown = 0,
+    stop = 1,
+    next,
+    jump,
+    error
+end
+
+struct PyriProgramStepNext
+    field string result
+    field PyriProgramStepNextOpCode op_code
+    field UUID jump_target
+end
+
+struct PyriProgramStep
+    field string step_name
+    field UUID step_id
+    field string procedure_name 
+    field string{list} procedure_args
+    field PyriProgramStepNext{list} next
+end
+
+struct PyriProgram
+    field string name
+    field PyriProgramStep{list} steps
+end
+
+struct PyriProgramState
+    field TimeSpec3 ts
+    field uint64 seqno
+    field PyriProgramStateFlags program_state_flags
+    field string active_program
+    field UUID current_step
+    field string current_step_name
+    field varvalue{string} extended
+end
+
+object PyriProgramMaster
+    implements Device
+    implements DeviceClock
+    implements IsochDevice
+
+    property DeviceInfo device_info [readonly,nolock]
+
+    wire PyriProgramState program_state [readonly]
+
+    function void load_program(string program_name)
+    function void reload_program()
+    function void clear_step_pointer()
+    function void setf_step_pointer(UUID step_uuid)
+    function void setf_step_pointer_by_name(string step_name)
+
+    function void run()
+    function void stop()
+    function void pause()
+    function void step_one()
+
+    property IsochInfo isoch_info [readonly,nolock]
+    property uint32 isoch_downsample [perclient]
+    wire DeviceTime device_clock_now [readonly,nolock]
+end

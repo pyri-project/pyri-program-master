@@ -1,0 +1,19 @@
+device:
+  name: pyri_program_master
+manufacturer:
+  name: PyRI_Project
+  uuid: 244389f3-35d5-4f9f-a244-c89649ce2a18
+model:
+  name: pyri_program_master
+  uuid: e956bd28-0945-4b65-a82b-26a5fd01aa3e
+user_description: Program master state machine service
+serial_number: 1
+device_classes:
+  - class_identifier:
+      name: program_master
+      uuid: 3bd68a9d-174e-4413-93e2-e2da8d119e8d
+    subclasses:
+      - program_master
+implemented_types:
+  - com.robotraconteur.device.Device
+  - tech.pyri.program_master.PyriProgramMaster
