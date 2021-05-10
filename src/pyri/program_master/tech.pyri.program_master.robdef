@@ -89,6 +89,7 @@ object PyriProgramMaster
     function void stop()
     function void pause()
     function void step_one()
+    function void clear_errors()
 
     property IsochInfo isoch_info [readonly,nolock]
     property uint32 isoch_downsample [perclient]

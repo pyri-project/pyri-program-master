@@ -382,6 +382,8 @@ class PyriProgramMaster:
         with self._lock:
             if self._running or self._stepping:
                 raise RR.InvalidOperationException("Cannot clear step pointer while running or stepping")
+            if self._error:
+                raise RR.InvalidOperationException("Errors must be cleared before clearing step pointer")
             self._clear_current_step()
             self._stopped = True
             self._paused = False
@@ -392,11 +394,14 @@ class PyriProgramMaster:
         with self._lock:
             if self._running or self._stepping:
                 raise RR.InvalidOperationException("Cannot move step pointer while running or stepping")
+
+            if self._error:
+                raise RR.InvalidOperationException("Errors must be cleared before moving step pointer")
             program = self._read_program()
             u = self._uuid_util.UuidToPyUuid(step_uuid)
             found = False
             for i in range(len(program.steps)):
-                if u == program.steps[i].step_id:
+                if u == self._uuid_util.UuidToPyUuid(program.steps[i].step_id):
                     found = True
 
             if not found:
@@ -413,6 +418,9 @@ class PyriProgramMaster:
         with self._lock:
             if self._running or self._stepping:
                 raise RR.InvalidOperationException("Cannot move step pointer while running or stepping")
+
+            if self._error:
+                raise RR.InvalidOperationException("Errors must be cleared before moving step pointer")
             program = self._read_program()
             u = None            
             for i in range(len(program.steps)):
@@ -429,6 +437,9 @@ class PyriProgramMaster:
         with self._lock:
             if self._running or self._stepping:
                 raise RR.InvalidOperationException("Already running")
+
+            if self._error:
+                raise RR.InvalidOperationException("Errors must be cleared before running")
             
             program = self._read_program()
 
@@ -437,7 +448,6 @@ class PyriProgramMaster:
             self._running = True
             self._paused = False
             self._stepping = False
-            self._error = False
             self._stopped = False
             self._pause_requested = False
 
@@ -450,7 +460,6 @@ class PyriProgramMaster:
             self._running = True
             self._paused = False
             self._stepping = False
-            self._error = False
             self._stopped = True
             self._pause_requested = False
 
@@ -474,6 +483,9 @@ class PyriProgramMaster:
         with self._lock:
             if self._running or self._stepping:
                 raise RR.InvalidOperationException("Already running")
+
+            if self._error:
+                raise RR.InvalidOperationException("Errors must be cleared before stepping")
             
             program = self._read_program()
 
@@ -482,11 +494,16 @@ class PyriProgramMaster:
             self._running = False
             self._paused = False
             self._stepping = True
-            self._error = False
             self._stopped = False
             self._pause_requested = False
 
             self._run_step(step)
+
+    def clear_errors(self):
+        with self._lock:
+            if not (self._stopped or self._paused):
+                raise RR.InvalidOperationException("Program must be stopped to clear errors")
+            self._error = False
 
     def close(self):
         pass
