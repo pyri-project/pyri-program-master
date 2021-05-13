@@ -19,7 +19,9 @@ class PyriProgramMaster:
 
         self._program_state = self._node.GetStructureType('tech.pyri.program_master.PyriProgramState')
         
-        self._device_manager = DeviceManagerClient(device_manager_url)
+        self._device_manager = DeviceManagerClient(device_manager_url, autoconnect=False)
+        self._device_manager.connect_device_type("tech.pyri.sandbox.PyriSandbox")
+        self._device_manager.connect_device_type("tech.pyri.variable_storage.VariableStorage")
         self._device_manager.refresh_devices(5)
         
         self._refresh_counter = 0
