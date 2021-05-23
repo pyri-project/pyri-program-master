@@ -11,7 +11,7 @@ setup(
     packages=find_namespace_packages(where='src'),
     include_package_data=True,
     package_data = {
-        'pyri.program_master': ['*.robdef']
+        'pyri.program_master': ['*.robdef','*.yml']
     },
     zip_safe=False,
     install_requires=[

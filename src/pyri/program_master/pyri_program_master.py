@@ -9,7 +9,7 @@ import traceback
 
 class PyriProgramMaster:
     
-    def __init__(self, device_manager_url, device_info = None, node : RR.RobotRaconteurNode = None):
+    def __init__(self, device_manager, device_info = None, node : RR.RobotRaconteurNode = None):
         self._lock = threading.RLock()
         if node is None:
             self._node = RR.RobotRaconteurNode.s
@@ -19,7 +19,7 @@ class PyriProgramMaster:
 
         self._program_state = self._node.GetStructureType('tech.pyri.program_master.PyriProgramState')
         
-        self._device_manager = DeviceManagerClient(device_manager_url, autoconnect=False)
+        self._device_manager = device_manager
         self._device_manager.connect_device_type("tech.pyri.sandbox.PyriSandbox")
         self._device_manager.connect_device_type("tech.pyri.variable_storage.VariableStorage")
         self._device_manager.refresh_devices(5)
