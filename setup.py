@@ -27,6 +27,7 @@ setup(
     entry_points = {
         'pyri.plugins.robdef': ['pyri-sandbox-robdef=pyri.program_master.robdef:get_robdef_factory'],
         'pyri.plugins.device_type_adapter': ['pyri-device-states-type-adapter = pyri.program_master.device_type_adapter:get_device_type_adapter_factory'],
-        'console_scripts': ['pyri-program-master-service = pyri.program_master.__main__:main']
+        'console_scripts': ['pyri-program-master-service = pyri.program_master.__main__:main'],
+        'pyri.plugins.service_node_launch': ['pyri-program-master-launch = pyri.program_master.service_node_launch:get_service_node_launch_factory']
     }
 )
