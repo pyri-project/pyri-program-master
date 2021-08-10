@@ -14,7 +14,8 @@ def main():
     with PyriServiceNodeSetup("tech.pyri.program_master",59906, \
         display_description="PyRI Program Master Service", \
         default_info=(__package__,"pyri_program_master_default_info.yml"), \
-        register_plugin_robdef=True, device_manager_autoconnect=False) as service_node_setup:
+        register_plugin_robdef=True, device_manager_autoconnect=False, \
+        distribution_name="pyri-program-master") as service_node_setup:
 
         extra_imports = RRN.GetRegisteredServiceTypes()
 
